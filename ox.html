@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OX</title>
+    <style>
+      body {
+        padding: 8px;
+        margin: 0;
+      }
+      .container {
+        border: 1px solid black;
+        border-bottom: 0;
+      }
+      .container > * + * {
+        border-top: 1px solid black;
+      }
+      h1.header {
+        margin: 0;
+        padding: 8px;
+        background-color: #d9ead3;
+        text-align: center;
+      }
+      .grid-container {
+        display: grid;
+        grid-template-columns: calc(100% - 120px) 120px;
+        background-color: #9fc5e7;
+      }
+      .grid-item {
+        min-height: 24px;
+        font-size: 16px;
+        font-weight: 500;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 1px solid black;
+      }
+      .grid-item.title {
+        padding: 8px;
+        font-size: 20px;
+        font-weight: bold;
+      }
+      .grid-item:nth-child(2n + 2) {
+        border-left: 1px solid black;
+        background-color: #ead1dc;
+        color: #cd1408;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 4px;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const questions = [
+          {
+            question:
+              "ในเรื่องราวของ RO ยักษ์ผู้สร้างโลกคือ Pangu ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ในเรื่องราวของ RO ยักษ์ผู้สร้างโลกคือ Ymir ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "เรื่องราวส่วนใหญ่ของ RO เกิดขึ้นที่ Midgarts ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "เรื่องราวส่วนใหญ่ของ RO เกิดขึ้นที่ โลกต่างมิติ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "ชื่อเต็มของ RO คือ Ragnarok Online ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "ชื่อเต็มของ RO คือ Regolark Online ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "มีแค่ Prontera เท่านั้นที่มีบริกร Kafra ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Class ของ Cenia หลังเปลี่ยนคลาสคือ Swordsman ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Class ของ Cenia หลังเปลี่ยนคลาสคือ Mage ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "กัปตันที่รับผิดชอบการวาร์ปในน่านนํ้า Izlude Island มีชื่อว่า Carew ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "กัปตันที่รับผิดชอบการวาร์ปในน่านนํ้า Izlude Island มีชื่อว่า Kahn ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "การเพิ่ม STR สามารถเพิ่ม P.ATK ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "การเพิ่ม STR สามารถเพิ่ม P.ATK และ M.ATK ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "การเพิ่ม STR สามารถเพิ่ม P.ATK และ P.DEF ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "การเพิ่ม AGI สามารถเพิ่ม ASPDเลเวล และ Flee ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "การเพิ่ม AGI สามารถเพิ่ม Haste ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "การเพิ่ม AGI สามารถเพิ่ม MSPD ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "การเพิ่ม VIT สามารถเพิ่ม P.DEF และ M.DEF ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "การเพิ่ม VIT สามารถเพิ่ม MAX HP และ MAX SP ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "การเพิ่ม VIT สามารถเพิ่ม P.DEF ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "การเพิ่ม INT สามารถเพิ่ม M.ATK และ M.DEF ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "การเพิ่ม INT สามารถเพิ่ม MAX SP ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "การเพิ่ม INT สามารถเพิ่ม MAX HP และ MAX SP ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "การเพิ่ม DEX สามารถเพิ่ม Haste ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "การเพิ่ม DEX สามารถเพิ่ม Hit ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "การเพิ่ม DEX สามารถเพิ่ม MSPD ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "การเพิ่ม LUK สามารถเพิ่ม Crit และ Anti-Crit ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "การเพิ่ม LUK สามารถเพิ่ม P.ATK ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "การเพิ่ม LUK สามารถเพิ่ม Hit ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Dagger จะทำดาเมจ 100% ต่อ Monster ขนาดกลาง/ใหญ่ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Dagger จะทำดาเมจ 100% ต่อ Monster ขนาดเล็ก ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "One-Handed Sword จะทำดาเมจ 100% ต่อ Monster ขนาดกลาง/ใหญ่ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "One-Handed Sword จะทำดาเมจ 100% ต่อ Monster ขนาดกลาง ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Two-Handed Sword จะทำดาเมจ 100% ต่อ Monster ขนาดใหญ่ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Two-Handed Sword จะทำดาเมจ 100% ต่อ Monster ขนาดกลาง ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Bow จะทำดาเมจ 100% ต่อ Monster ขนาดกลาง/เล็ก ถูก (O) หรือผิด (X)? ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Bow จะทำดาเมจ 100% ต่อ Monster ขนาดใหญ่ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Spear จะทำดาเมจ 100% ต่อ Monster ขนาดใหญ่ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Spear จะทำดาเมจ 100% ต่อ Monster ขนาดเล็ก ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Class ใดก็ตามที่ตรงตามเงื่อนไขแล้ว จะสามารถเช่าสัตว์ขี่ Pecopeco ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Swordsmanที่ตรงตามเงื่อนไขแล้ว จะสามารถเช่าสัตว์ขี่ Pecopeco ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Knightที่ตรงตามเงื่อนไขแล้ว จะสามารถเช่าสัตว์ขี่ Pecopeco ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Class ใดก็ตามที่ตรงตามเงื่อนไขแล้ว จะสามารถเช่า Falcon ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Archerที่ตรงตามเงื่อนไขแล้ว จะสามารถเช่า Falcon ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Hunterที่ตรงตามเงื่อนไขแล้ว จะสามารถเช่า Falcon ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Izlude อยู่ทางตะวันออกเฉียงใต้ของ Prontera ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Izlude อยู่ทางตะวันตกเฉียงเหนือของ Prontera ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Geffen อยู่ทางตะวันออกเฉียงใต้ของ Prontera ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Geffen อยู่ทางตะวันตกเฉียงเหนือของ Prontera ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Payon อยู่ทางตะวันออกเฉียงใต้ของ Prontera ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Payon อยู่ทางตะวันตกเฉียงใต้ของ Prontera ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Morroc อยู่ทางตะวันออกเฉียงใต้ของ Prontera ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Morroc อยู่ทางตะวันตกเฉียงใต้ของ Prontera ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "ไม่สามารถลืมตาได้ขณะที่จาม ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "มนุษย์กับกล้วยหอมมียีนที่ตรงกัน 50% ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "จระเข้สามารถคลานถอยหลังได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "ที่จริงแล้วศีรษะเป็นส่วนที่อ้วนที่สุดในร่างกาย ซึ่งมีปริมาณไขมันถึง 60% ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "ถ้ากินอิ่มเกินไป ความสามารถในการฟังจะลดลง ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [Increase SP Recovery] ของ Mage สามารถเพิ่ม HP Regen และ SP Regen ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [Increase SP Recovery] ของ Mage สามารถเพิ่ม SP Regen ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [Increase HP Recovery] ของ Swordsman สามารถเพิ่ม HP Regen ของตนได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [Increase HP Recovery] ของ Swordsman สามารถเพิ่ม HP Regen และ SP Regen ของตนได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "สกิล [Double Strafe] ของ Archer เป็น Active Skill ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [Double Strafe] ของ Archer เป็น Passive Skill ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "สกิล [Angel's Blessing] ของ Acolyte สามารถเพิ่ม STR, DEX, และ INT ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [Angel's Blessing] ของ Acolyte สามารถเพิ่ม Crit และ Anti-Crit ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "สกิล [Zen] ของ Mage สามารถเพิ่ม SP Regen ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [Zen] ของ Mage สามารถเพิ่ม HP Regen และ SP Regen ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Skill [Double Attack] ของ Thief จะเกิดได้เมื่อสวมใส่อาวุธประเภท Dagger ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Skill [Double Attack] ของ Thief จะเกิดได้เมื่อสวมใส่อาวุธประเภท Katar ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "สกิล [First Aid] สามารถฟื้นฟู HP ของตนได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [First Aid] สามารถฟื้นฟู HP และ SP ของตนได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "สกิล [Play Dead] ของ Novice สามารถเคลียร์ความแค้นของมอนสเตอร์ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "สกิล [Play Dead] ของ Novice สามารถเพิ่ม HP Regen และ SP Regen ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Mjolnir Mine ในตำนาน มีเถ้าแก่ใจดำคนหนึ่งที่เรียกว่า Seal ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "ใต้ Geffen เคยมีอาณาจักรเวทมนตร์แห่งหนึ่ง ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Endless Tower ต้องเข้าไปแบบปาร์ตี้เท่านั้น ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "หัวหน้าองครักษ์ Kafra มีชื่อเล่นว่า Remyi ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "หลังจากที่ กิลด์ มีเลเวลสูงขึ้น ลิมิตของจำนวนสมาชิกก็จะเพิ่มขึ้นด้วย ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Payon เป็นเมืองบนภูเขา ที่ราชาในตำนานเคยพำนัก ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Magnolia คือวิญญาณร้ายของ Pecopeco Egg ที่ถูกตีแตกแล้ว ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Falcon จะมีได้เฉพาะคลาส Hunter เท่านั้น คลาสอื่น ๆ ไม่สามารถมีได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "เมืองทะเลทรายอย่าง Morroc ถือเป็นสวรรค์ของ Knight อย่างแท้จริง ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Panacea สามารถลบล้างเอฟเฟกต์ด้านลบส่วนใหญ่ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "ดอกป๊อปปี้เป็นสัญลักษณ์ของความอดทน ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "กุหลาบขาวเป็นสัญลักษณ์ของรักแรก ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "ฟุตบอลลงสนามได้ทีมละ 11 คน ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "เมื่อเทนํ้าร้อนในฤดูหนาว แก้วที่มีความหนาจะแตกได้ง่าย ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "กลิ่นเมนทอลในยาสีฟันทำจากใบสะระแหน่ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "ทีมสาวใช้ Kafra มีเคล็ดลับเกี่ยวกับการ หยดน้ำส้มสายชูลงบนข้าว เพื่อขจัดกลิ่นไหม้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "นักสำรวจมอนสเตอร์พบว่า พักนี้การรับรู้กลิ่นเริ่มแย่ลงเรื่อย ๆ เป็นเพราะการทำงานของตับที่อ่อนแอ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ช่วงนี้ Talyn เป็นร้อนในเพราะทานลิ้นจี่มากเกินไป ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Catwoman ของ Foulon Tavern มีประสาทสัมผัสของลิ้นที่ไวมาก ดังนั้นนางจึงไม่สามารถกินอาหารที่ร้อนได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "น้ำแข็งแห้งเกิดจากการกลั่นตัวของนํ้า ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "สิ่งมีชีวิตที่มีจำนวนมากที่สุดในมหาสมุทร คือปิรันย่ากลายพันธุ์ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ช่องเล็ก ๆ ในรังผึ้งของ Mistress มีลักษณะเป็นรูปวงกลม ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "สดุที่ใช้ทำไส้ดินสอ คือกราไฟต์ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "รหัสโทรศัพท์ของประเทศอินโดนีเซียคือ +62 ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "กังหันลมของ Prontera West Gate ใช้ในการระบายนํ้าเป็นหลัก ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "เลขโรมัน XVIII เท่ากับ 18 ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "ชื่อเมืองหลวงของที่ยาวที่สุดในโลกคือกรุงเทพฯ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "ม้านั่งที่ Prontera South Gate สามารถนั่งได้เรื่อย ๆ โดยไม่ต้องลุก ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Poison เป็นของหักใช้ที่สำคัญของอาชีพ Archer ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ถ้ามีความสัมพันธ์ที่ดีกับ Hollgrehenn ล่ะก็ จะสามารถเพิ่มอัตราสำเร็จของการ Upgrading อุปกรณ์ ได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "เลนส์ที่มีขอบหนากว่าจุดศูนย์กลางเรียกว่าเลนส์นูน ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "หน่วยแสดงความเร็วของเรือคือนอต ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "ธาตุที่เบาที่สุดคือธาตุไฮโดรเจน ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "เลขโรมัน M เท่ากับ 1,000,000 ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "รหัสโทรศัพท์ของประเทศฟิลิปปินส์คือ +63 ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "รูปทรงสามเหลี่ยม มีผลรวมของมุมภายในเท่ากับ 180 องศา ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "ส่วนที่หวานที่สุดของแอปเปิ้ลคือส่วนล่างสุด ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "รูปทรงสี่เหลี่ยม มีผลรวมของมุมภายในเท่ากับ 360 องศา ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "ทิชชู่เปียกจัดเป็นขยะเปียก ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "องุ่นตากแห้งจัดเป็นขยะแห้ง ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "สาเหตุที่ Arielle มีความสมดุลที่ดีเยี่ยม เพราะมีสมองที่พัฒนามาก ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "รากบัวเป็นรากของบัว ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ดาวเคราะห์ที่อยู่ใกล้ดวงอาทิตย์ที่สุดคือดาวอังคาร ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "สีดำสามารถดูดซับแสงทั้ง 7 สีของแสงอาทิตย์ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question: "ปลาฉลามออกลูกเป็นไข่ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "เมฆและหมอกมีพื้นฐานเป็นสสารเดียวกัน ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Koko ของ Payon เลือกกินอาหารจนทำให้ตาบอดในเวลากลางคืน มีสาเหตุมาจากการขาดวิตามิน B ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Koko ของ Payon มักจะนอนกัดฟันอยู่เสมอ มีสาเหตุมาจากการขาดสังกะสี ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "บริเวณชายหาด Izlude Island ในช่วงฤดูร้อน มักจะเกิดปรากฎการณ์ภาพลวงตา ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "ดาเมจที่เกิดจาก M.ATK จะได้รับผลกระทบจากขนาดร่างของเป้าหมาย ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "ตว์บกที่มีขนาดใหญ่ที่สุดคือช้าง ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "การโจมตีธาตุ Poison สามารถทำดาเมจเพิ่มขึ้นต่อธาตุทั้งหมดได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ASPD และ Final ASPD ไม่ใช่สเตตัสเดียวกัน ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "Crit และ Final Crit เป็นสเตตัสเดียวกัน ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "Flee และ Final Flee เป็นสเตตัสเดียวกัน ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question: "กีฬากอล์ฟตามมาตรฐานแล้วมี 20 หลุม ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "หลังใช้ Magnum Break แล้ว โจมตีทั่วไปจะกลายเป็น ธาตุ Fire ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "หลังใช้ Aspersio แล้ว โจมตีทั่วไปของเป้าหมายจะกลายเป็น ธาตุ Holy ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "มีเพียง Merchant เท่านั้น ที่สามารถตั้ง แผง ได้ ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ทุกวันเวลา 12:00 น. และ 20:00 น. ที่เมือง Prontera จะได้รับ Odin's Blessing เพิ่มขึ้น?",
+            answer: "O",
+          },
+          {
+            question:
+              "เมื่อทำการเพิ่ม Haste จะช่วยลดเวลา การร่ายแปรผันได้ ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "เวลาเกิดใหม่ของ MVP กับ Mini นั้นตรงกัน ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ถ้าจะค้นหาสินค้าที่ต้องการซื้อที่แผงต้องค้นหาสินค้าที่ต้องการในทุก ๆ แผง ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "หลังขายสินค้าในตลาดกลางด้วยราคา Diamond แล้ว จะได้รับ Crystal ในจำนวนเทียบเท่ากับราคา Diamondที่ขายหลังหักภาษีซื้อขายแล้ว ถูก (O) หรือผิด (X)?",
+            answer: "O",
+          },
+          {
+            question:
+              "หลังจากที่ MVP Maya เปิด Defensive Stance แล้ว Class สาย Range ควรจะเสริม DPS เพื่อทำลายโล่ให้แตก ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+          {
+            question:
+              "ผู้รับสมัครนักเรียนใหม่สุดสวยแห่ง Prontera มีชื่อว่า Qiqi ถูก (O) หรือผิด (X)?",
+            answer: "X",
+          },
+        ];
+
+        document.getElementById("table").innerHTML = questions
+          .map(
+            (data) =>
+              `<div class="grid-item">${data.question}</div><div class="grid-item">${data.answer}</div>`
+          )
+          .join("");
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="header">คำถาม / คำตอบ OX [Version:1.1]</h1>
+      <div id="table" class="grid-container" />
+    </div>
+  </body>
+</html>
